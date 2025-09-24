@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -17,12 +18,13 @@ options.add_argument("--disable-logging")
 # Path to ChromeDriver
 service = Service('chromedriver')  
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+wait = WebDriverWait(driver, 10)
+wait.until(lambda driver: driver.execute_script("return document.readyState") == "complete")
 
 data = []
 
 html = driver.page_source
 soup = BeautifulSoup(html, "html.parser")
-i_container = soup.find_all("div", class_="gG1uA844gIiB2+C3QWiaKA==")
 
 
 # Target search URL
@@ -33,11 +35,17 @@ def scrape_data(search_query):
     # Scroll to load more products
     for i in range(2):
         time.sleep(5)
-        driver.execute_script("window.scrollTo(0, 1000);")
+        driver.execute_script("window.scrollTo(0, 500);")
         time.sleep(2)
-        driver.execute_script("window.scrollTo(1000, 2000);")
+        driver.execute_script("window.scrollTo(500, 1000);")
         time.sleep(2)
-        driver.execute_script("window.scrollTo(2000, 3000);")
+        driver.execute_script("window.scrollTo(1000, 1500);")
+        time.sleep(2)
+        driver.execute_script("window.scrollTo(1500, 2000);")
+        time.sleep(2)
+        driver.execute_script("window.scrollTo(2000, 2500);")
+        time.sleep(2)
+        driver.execute_script("window.scrollTo(2500, 3000);")
         time.sleep(2)
 
     # Extract product data
@@ -82,3 +90,4 @@ print(df.info())
 df.to_csv(f'{tokopedia_products}.csv', index=False)
 
 print(f"Scraping complete. Data saved to {tokopedia_products}.csv")
+
