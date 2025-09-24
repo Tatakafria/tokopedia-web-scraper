@@ -10,12 +10,12 @@ query = input('Barang yang ingin dicari: ')
 tokopedia_products = input('Input nama file output: ')
 
 # Setup Chrome options
-options = Options()  # Run in background
+options = Options()  
 options.add_argument("--window-size=900,700")
 options.add_argument("--disable-logging")
 
 # Path to ChromeDriver
-service = Service('chromedriver')  # Replace with full path if needed
+service = Service('chromedriver')  
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 data = []
@@ -80,4 +80,5 @@ scrape_data(query)
 df = pd.DataFrame(data)
 print(df.info())
 df.to_csv(f'{tokopedia_products}.csv', index=False)
+
 print(f"Scraping complete. Data saved to {tokopedia_products}.csv")
